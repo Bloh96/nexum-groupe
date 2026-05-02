@@ -3,90 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUM ALPHA | Expertise & Conseil</title>
+    <title>NEXUM ALPHA | Leadership & Expertise Financière</title>
+    <!-- Bibliothèques : Tailwind, FontAwesome pour les icônes, AOS pour les animations -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <style>
-        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
-        .card-hover:hover { transform: translateY(-10px); transition: all 0.3s ease; }
+        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        .hero-gradient { background: radial-gradient(circle at top right, #3b82f6, #1e3a8a); }
+        .text-gradient { background: linear-gradient(to right, #2563eb, #1d4ed8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-modern { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-modern:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3); }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-slate-50 text-slate-800 scroll-smooth">
 
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg fixed w-full z-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <span class="text-2xl font-bold text-blue-900 underline decoration-blue-500">NEXUM ALPHA</span>
-                </div>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#services" class="text-gray-700 hover:text-blue-600 font-medium">Services</a>
-                    <a href="#filiales" class="text-gray-700 hover:text-blue-600 font-medium">Nos Filiales</a>
-                    <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium">Contact</a>
-                    <a href="admin.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Espace Membre</a>
-                </div>
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-50 glass-nav border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img id="site_logo" src="https://via.placeholder.com/50" alt="Logo" class="h-10 w-auto rounded">
+                <span class="text-2xl font-black text-blue-900 tracking-tighter">NEXUM ALPHA</span>
+            </div>
+            <div class="hidden lg:flex items-center gap-8 font-semibold text-slate-600">
+                <a href="#services" class="hover:text-blue-600 transition">Services</a>
+                <a href="#filiales" class="hover:text-blue-600 transition">Filiales</a>
+                <a href="#about" class="hover:text-blue-600 transition">À Propos</a>
+                <button onclick="toggleModal('register-modal')" class="btn-modern bg-blue-600 text-white px-6 py-2.5 rounded-full shadow-lg">Rejoindre l'Espace Membre</button>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="pt-32 pb-20 gradient-bg text-white">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-6">Expertise Financière & Accompagnement Stratégique</h1>
-            <p class="text-xl mb-10 opacity-90 text-blue-100">Propulsez vos projets avec NEXUM ALPHA, votre partenaire de confiance au Bénin.</p>
-            <div class="flex justify-center gap-4">
-                <a href="#contact" class="bg-white text-blue-900 px-8 py-3 rounded-full font-bold shadow-xl hover:bg-gray-100">Nous Contacter</a>
-                <a href="#services" class="border-2 border-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-blue-900 transition">Nos Services</a>
+    <!-- HERO SECTION -->
+    <section class="pt-40 pb-24 hero-gradient text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+            <span class="inline-block px-4 py-1 rounded-full bg-blue-500/30 border border-blue-300/30 text-sm font-medium mb-6 uppercase tracking-widest" data-aos="fade-down">Cabinet de Conseil & Finance</span>
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-8 leading-tight" data-aos="fade-up">Architectes de votre <br><span class="text-blue-200">Croissance Économique</span></h1>
+            <p class="text-xl text-blue-100 max-w-2xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">
+                Analyse financière, gestion de projets et formation continue. Nous transformons vos défis en opportunités stratégiques.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4" data-aos="fade-up" data-aos-delay="200">
+                <a href="#contact" class="btn-modern bg-white text-blue-900 px-10 py-4 rounded-full font-bold text-lg">Lancer un projet</a>
+                <a href="#filiales" class="btn-modern border border-blue-200 px-10 py-4 rounded-full font-bold text-lg">Découvrir nos filiales</a>
             </div>
         </div>
-    </header>
+    </section>
 
-    <!-- Filiales Section -->
-    <section id="filiales" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold text-gray-800 mb-12 uppercase tracking-widest">Nos Entités</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- NEXUM ALPHA -->
-                <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 card-hover shadow-sm">
-                    <div class="w-16 h-16 gradient-bg rounded-lg flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-chart-line text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">NEXUM ALPHA</h3>
-                    <p class="text-gray-600">Cabinet principal spécialisé en économie, analyse financière et gestion de projets.</p>
+    <!-- SERVICES (Dynamique) -->
+    <section id="services" class="py-24 max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-blue-900 mb-4">Notre Expertise</h2>
+            <div id="secteur_affichage" class="text-slate-500 max-w-xl mx-auto">Chargement de votre expertise...</div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 btn-modern" data-aos="zoom-in">
+                <i class="fas fa-chart-pie text-4xl text-blue-600 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-4">Analyse Financière</h3>
+                <p class="text-slate-600">Diagnostics profonds et modélisation économique pour sécuriser vos investissements.</p>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 btn-modern" data-aos="zoom-in" data-aos-delay="100">
+                <i class="fas fa-project-diagram text-4xl text-emerald-500 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-4">Gestion de Projets</h3>
+                <p class="text-slate-600">Accompagnement opérationnel de la conception à la réalisation de vos micro-projets.</p>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 btn-modern" data-aos="zoom-in" data-aos-delay="200">
+                <i class="fas fa-user-tie text-4xl text-orange-500 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-4">Conseil Stratégique</h3>
+                <p class="text-slate-600">Audit de performance et restructuration pour les PME et collectivités locales.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FILIALES SECTION -->
+    <section id="filiales" class="py-24 bg-slate-100">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-12">Le Groupe NEXUM</h2>
+            <div class="flex flex-wrap justify-center gap-12 opacity-70">
+                <div class="text-center">
+                    <div class="font-black text-2xl text-slate-400">NEXUM SYNERGY</div>
+                    <p class="text-xs uppercase font-bold tracking-widest text-slate-500">Filiale Opérationnelle</p>
                 </div>
-                <!-- NEXUM SYNERGY -->
-                <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 card-hover shadow-sm">
-                    <div class="w-16 h-16 bg-emerald-500 rounded-lg flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-handshake text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">NEXUM SYNERGY</h3>
-                    <p class="text-gray-600">Solutions collaboratives et synergie opérationnelle pour les entreprises locales.</p>
-                </div>
-                <!-- CeFOR BENIN -->
-                <div class="p-8 rounded-2xl bg-gray-50 border border-gray-100 card-hover shadow-sm">
-                    <div class="w-16 h-16 bg-orange-500 rounded-lg flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-graduation-cap text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-4">CeFOR BENIN</h3>
-                    <p class="text-gray-600">Centre de formation d'excellence pour le renforcement des capacités professionnelles.</p>
+                <div class="text-center">
+                    <div class="font-black text-2xl text-slate-400">CeFOR BENIN</div>
+                    <p class="text-xs uppercase font-bold tracking-widest text-slate-500">Pôle Formation</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="mb-4 text-xl font-bold">NEXUM ALPHA</p>
-            <p class="text-gray-400 mb-6">IFU : [Ton_IFU] | RCCM : [Ton_RCCM]</p>
-            <div class="flex justify-center space-x-6 mb-8 text-2xl">
-                <a href="#" class="hover:text-blue-400"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="hover:text-blue-400"><i class="fab fa-whatsapp"></i></a>
+    <!-- FOOTER DYNAMIQUE -->
+    <footer class="bg-white border-t border-slate-200 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-2">
+                    <span class="text-2xl font-black text-blue-900 mb-6 block">NEXUM ALPHA</span>
+                    <p class="text-slate-500 max-w-sm mb-6">Cabinet d'expertise économique et de solutions de gestion numérique pour un avenir durable au Bénin.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-blue-400 hover:bg-blue-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-green-500 hover:bg-green-500 hover:text-white transition"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 uppercase text-sm tracking-widest">Informations Juridiques</h4>
+                    <ul class="text-slate-500 space-y-4">
+                        <li id="footer_ifu">IFU : Chargement...</li>
+                        <li id="footer_rccm">RCCM : Chargement...</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 uppercase text-sm tracking-widest">Contact</h4>
+                    <ul class="text-slate-500 space-y-4">
+                        <li id="footer_email"><i class="fas fa-envelope mr-2"></i> ...</li>
+                        <li id="footer_tel"><i class="fas fa-phone mr-2"></i> ...</li>
+                    </ul>
+                </div>
             </div>
-            <p class="text-sm text-gray-500">&copy; 2026 NEXUM ALPHA. Tous droits réservés.</p>
+            <div class="text-center text-slate-400 text-sm border-t pt-8">
+                &copy; 2026 NEXUM ALPHA. Dirigé par Joseph D. BLOH.
+            </div>
         </div>
     </footer>
 
+    <!-- MODAL INSCRIPTION -->
+    <div id="register-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-blue-900/40 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden" data-aos="zoom-in">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-blue-900">Devenir Membre</h2>
+                    <button onclick="toggleModal('register-modal')" class="text-slate-400 hover:text-slate-600"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="space-y-4">
+                    <input type="text" id="reg_nom" placeholder="Nom complet" class="w-full p-4 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-blue-600 outline-none">
+                    <input type="email" id="reg_email" placeholder="Email professionnel" class="w-full p-4 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-blue-600 outline-none">
+                    <input type="password" id="reg_pass" placeholder="Créer un mot de passe" class="w-full p-4 bg-slate-50 border-0 rounded-2xl focus:ring-2 focus:ring-blue-600 outline-none">
+                    <button onclick="inscrireMembre()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg hover:bg-blue-700 transition">Soumettre ma candidature</button>
+                </div>
+                <p class="text-center text-xs text-slate-400 mt-6">Votre accès sera soumis à la validation de la direction NEXUM ALPHA.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, onSnapshot, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = { projectId: "nexumalpha-27597" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- SYNCHRONISATION EN TEMPS RÉEL DU SITE ---
+        onSnapshot(doc(db, "parametres", "entreprise"), (snap) => {
+            if(snap.exists()){
+                const d = snap.data();
+                document.getElementById('site_logo').src = d.logoUrl || "https://via.placeholder.com/50";
+                document.getElementById('secteur_affichage').innerText = d.secteur || "Expertise Multidisciplinaire";
+                document.getElementById('footer_ifu').innerText = "IFU : " + (d.ifu || "En attente");
+                document.getElementById('footer_rccm').innerText = "RCCM : " + (d.rccm || "En attente");
+                document.getElementById('footer_email').innerHTML = `<i class="fas fa-envelope mr-2"></i> ${d.email || 'contact@nexum.bj'}`;
+                document.getElementById('footer_tel').innerHTML = `<i class="fas fa-phone mr-2"></i> ${d.tel || 'Contactez-nous'}`;
+            }
+        });
+
+        // --- INSCRIPTION MEMBRE ---
+        window.inscrireMembre = async () => {
+            const nom = document.getElementById('reg_nom').value;
+            const email = document.getElementById('reg_email').value;
+            if(!nom || !email) return alert("Veuillez remplir les champs.");
+
+            await addDoc(collection(db, "utilisateurs"), {
+                nom: nom,
+                email: email,
+                valide: false,
+                date: new Date().toLocaleDateString()
+            });
+            alert("Votre demande a été envoyée ! Joseph D. BLOH examinera votre profil.");
+            toggleModal('register-modal');
+        };
+    </script>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+        function toggleModal(id) {
+            document.getElementById(id).classList.toggle('hidden');
+        }
+    </script>
 </body>
 </html>
