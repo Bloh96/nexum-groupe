@@ -3,136 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUM ALPHA | Hub d'Expertise Futuriste</title>
+    <title>NEXUM ALPHA | Hub Global</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        :root { --neon-blue: #00f2ff; --deep-space: #0a0e17; }
-        body { background-color: var(--deep-space); color: #e2e8f0; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .text-neon { color: var(--neon-blue); text-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
-        .nav-glow { border-bottom: 1px solid rgba(0, 242, 255, 0.2); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); }
-        .btn-neon { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); transition: all 0.3s; }
-        .btn-neon:hover { background: var(--neon-blue); color: black; box-shadow: 0 0 20px var(--neon-blue); }
+        :root { --neon: #00f2ff; --bg: #0a0e17; }
+        body { background: var(--bg); color: #e2e8f0; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .shop-card:hover { transform: translateY(-10px); border-color: var(--neon); box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); }
     </style>
 </head>
-<body class="font-sans overflow-x-hidden">
-
-    <nav class="fixed w-full z-50 glass-card nav-glow h-20 flex items-center px-6 justify-between">
+<body>
+    <nav class="fixed w-full z-50 glass h-20 flex items-center px-8 justify-between">
         <div class="flex items-center gap-3">
-            <img id="site_logo" src="" class="h-12 w-auto filter drop-shadow-[0_0_5px_#00f2ff]">
-            <span class="text-2xl font-black tracking-tighter text-white">NEXUM <span class="text-neon">ALPHA</span></span>
+            <img id="site_logo" src="" class="h-10">
+            <span class="text-xl font-bold italic">NEXUM <span style="color:var(--neon)">ALPHA</span></span>
         </div>
-        <div class="hidden lg:flex gap-8 items-center text-sm font-bold uppercase tracking-widest">
-            <a href="#carrieres" class="hover:text-neon transition">Carrières</a>
-            <a href="#resultats" class="hover:text-neon transition">Résultats</a>
-            <a href="admin.html" class="btn-neon px-5 py-2 rounded-full">Dashboard Admin</a>
+        <div class="flex gap-6 items-center">
+            <a href="#boutique" class="hover:text-cyan-400">Boutique</a>
+            <button onclick="document.getElementById('badge-modal').classList.remove('hidden')" class="bg-cyan-500 text-black px-4 py-2 rounded-full font-bold text-xs">MON BADGE</button>
         </div>
     </nav>
 
-    <section class="h-screen flex items-center justify-center text-center px-4 relative">
-        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
-        <div class="relative z-10" data-aos="zoom-out">
-            <h1 class="text-6xl md:text-8xl font-black mb-6 italic uppercase">L'Innovation <br><span class="text-neon">Sans Limites</span></h1>
-            <p class="max-w-2xl mx-auto text-slate-400 text-lg mb-10">Solutions de gestion, expertise pluridisciplinaire et formation d'élite au coeur de l'Afrique de l'Ouest.</p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="#carrieres" class="bg-white text-black px-10 py-4 rounded-full font-black hover:scale-105 transition">VOIR LES OFFRES</a>
-                <a href="#secteurs" class="btn-neon px-10 py-4 rounded-full font-black">NOS SECTEURS</a>
-            </div>
-        </div>
+    <section class="h-[60vh] flex flex-col items-center justify-center text-center">
+        <h1 class="text-6xl font-black mb-4">L'EXPERTISE <span style="color:var(--neon)">DIGITALE</span></h1>
+        <p class="text-slate-400">Formations d'élite et produits numériques de haute performance.</p>
     </section>
 
-    <section id="secteurs" class="py-24 px-6 max-w-7xl mx-auto">
-        <div class="grid md:grid-cols-4 gap-6">
-            <div class="glass-card p-8 rounded-3xl" data-aos="fade-up">
-                <i class="fas fa-microscope text-neon text-3xl mb-6"></i>
-                <h3 class="font-bold mb-3">Recherche & Réalisation</h3>
-                <p class="text-sm text-slate-400">Innovation scientifique et mise en oeuvre de projets complexes.</p>
+    <section id="boutique" class="py-20 px-8 max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold mb-12 italic border-l-4 border-cyan-500 pl-4">BOUTIQUE DIGITALE</h2>
+        <div class="grid md:grid-cols-3 gap-8" id="shop-container">
             </div>
-            <div class="glass-card p-8 rounded-3xl" data-aos="fade-up" data-aos-delay="100">
-                <i class="fas fa-brain text-neon text-3xl mb-6"></i>
-                <h3 class="font-bold mb-3">Consulting & Analyse</h3>
-                <p class="text-sm text-slate-400">Analyse de gestion de projets et audits stratégiques.</p>
-            </div>
-            <div class="glass-card p-8 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
-                <i class="fas fa-dna text-neon text-3xl mb-6"></i>
-                <h3 class="font-bold mb-3">Bio Alimentaire</h3>
-                <p class="text-sm text-slate-400">Expertise en sécurité alimentaire et biotechnologies.</p>
-            </div>
-            <div class="glass-card p-8 rounded-3xl" data-aos="fade-up" data-aos-delay="300">
-                <i class="fas fa-laptop-code text-neon text-3xl mb-6"></i>
-                <h3 class="font-bold mb-3">Formation Informatique</h3>
-                <p class="text-sm text-slate-400">Renforcement des capacités en hautes technologies.</p>
-            </div>
-        </div>
     </section>
 
-    <section id="carrieres" class="py-20 bg-black/50">
-        <div class="max-w-5xl mx-auto px-6">
-            <h2 class="text-3xl font-bold mb-10 italic">RECRUTEMENTS <span class="text-neon">// NEXUM ALPHA</span></h2>
-            <div id="job_container" class="space-y-4">
-                </div>
+    <div id="badge-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/80 backdrop-blur-md">
+        <div class="glass p-8 rounded-3xl w-full max-w-lg">
+            <h2 class="text-2xl font-bold mb-6 text-cyan-400">Générer mon Badge Membre</h2>
+            <div class="space-y-4 text-black">
+                <input type="text" id="b_nom" placeholder="Nom Complet" class="w-full p-3 rounded-xl bg-white/10 text-white outline-none border border-white/20">
+                <input type="text" id="b_poste" placeholder="Poste / Fonction" class="w-full p-3 rounded-xl bg-white/10 text-white outline-none border border-white/20">
+                <div class="text-white text-sm mb-2">Photo d'identité (URL ou Base64) :</div>
+                <input type="file" id="b_photo" class="text-white text-xs">
+                <button onclick="genererBadgePDF()" class="w-full bg-cyan-500 py-4 rounded-2xl font-bold text-black hover:bg-cyan-400 transition">TÉLÉCHARGER LE BADGE</button>
+            </div>
+            <button onclick="document.getElementById('badge-modal').classList.add('hidden')" class="mt-4 text-slate-500 text-sm">Fermer</button>
         </div>
-    </section>
-
-    <section id="resultats" class="py-20">
-        <div class="max-w-5xl mx-auto px-6">
-            <h2 class="text-3xl font-bold mb-10 italic text-right">RÉSULTATS <span class="text-neon">// CHALLENGES</span></h2>
-            <div id="result_container" class="grid md:grid-cols-2 gap-6">
-                </div>
-        </div>
-    </section>
-
-    <footer class="py-20 border-t border-white/10 text-center">
-        <p id="footer_legal" class="text-xs text-slate-500 uppercase tracking-widest mb-4"></p>
-        <div class="text-neon font-bold">NEXUM ALPHA &copy; 2026</div>
-    </footer>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = { projectId: "nexumalpha-27597" };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAJmFMpJsMsQCrYM4Xw5yVScNfDzW6tncI",
+            authDomain: "nexumalpha-27597.firebaseapp.com",
+            projectId: "nexumalpha-27597",
+            storageBucket: "nexumalpha-27597.firebasestorage.app"
+        };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // SYNC INFOS
-        onSnapshot(doc(db, "parametres", "entreprise"), (s) => {
-            if(s.exists()){
-                const d = s.data();
-                document.getElementById('site_logo').src = d.logoUrl;
-                document.getElementById('footer_legal').innerText = `IFU: ${d.ifu} | RCCM: ${d.rccm} | Contact: ${d.email}`;
-            }
-        });
-
-        // SYNC JOBS
-        onSnapshot(collection(db, "jobs"), (s) => {
-            const container = document.getElementById('job_container');
+        // CHARGER BOUTIQUE
+        onSnapshot(collection(db, "boutique"), (snap) => {
+            const container = document.getElementById('shop-container');
             container.innerHTML = "";
-            s.forEach(doc => {
-                const j = doc.data();
-                container.innerHTML += `<div class="glass-card p-6 rounded-2xl flex justify-between items-center border-l-4 border-neon">
-                    <div><h4 class="font-bold text-xl">${j.titre}</h4><p class="text-slate-400 text-sm">${j.description}</p></div>
-                    <button class="btn-neon px-6 py-2 rounded-lg text-xs font-bold">POSTULER</button>
-                </div>`;
+            snap.forEach(doc => {
+                const p = doc.data();
+                container.innerHTML += `
+                    <div class="glass p-6 rounded-3xl shop-card transition">
+                        <img src="${p.image}" class="w-full h-48 object-cover rounded-2xl mb-4">
+                        <h3 class="text-xl font-bold mb-2">${p.nom}</h3>
+                        <p class="text-slate-400 text-sm mb-4">${p.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-cyan-400 font-bold">${p.prix} FCFA</span>
+                            <button class="bg-white text-black px-4 py-2 rounded-lg text-xs font-bold">ACHETER</button>
+                        </div>
+                    </div>`;
             });
         });
 
-        // SYNC RÉSULTATS
-        onSnapshot(collection(db, "resultats"), (s) => {
-            const container = document.getElementById('result_container');
-            container.innerHTML = "";
-            s.forEach(doc => {
-                const r = doc.data();
-                container.innerHTML += `<div class="glass-card p-6 rounded-2xl border-t-2 border-neon">
-                    <h4 class="font-bold text-neon mb-2 uppercase">${r.nom}</h4>
-                    <p class="text-white font-mono text-lg">${r.score}</p>
-                </div>`;
-            });
-        });
+        // LOGIQUE BADGE
+        window.genererBadgePDF = () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: [54, 86] }); // Format carte de crédit
+            
+            const nom = document.getElementById('b_nom').value;
+            const poste = document.getElementById('b_poste').value;
+
+            doc.setFillColor(10, 14, 23);
+            doc.rect(0, 0, 54, 86, 'F');
+            doc.setTextColor(0, 242, 255);
+            doc.setFontSize(12);
+            doc.text("NEXUM ALPHA", 27, 15, null, null, "center");
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+            doc.text(nom.toUpperCase(), 27, 55, null, null, "center");
+            doc.setFontSize(8);
+            doc.text(poste, 27, 62, null, null, "center");
+            doc.save(`Badge_${nom}.pdf`);
+        };
     </script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init();</script>
 </body>
 </html>
