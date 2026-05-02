@@ -1,134 +1,98 @@
+<!-- Copie ce code dans ton fichier admin.html sur GitHub -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace Gérant | NEXUM ALPHA</title>
+    <title>Direction NEXUM ALPHA | Administration</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Configuration automatique basée sur ton ID
-        const firebaseConfig = {
-            projectId: "nexumalpha-27597",
-            authDomain: "nexumalpha-27597.firebaseapp.com",
-            storageBucket: "nexumalpha-27597.appspot.com",
-        };
-
+        const firebaseConfig = { projectId: "nexumalpha-27597" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- Système de Connexion ---
-        window.checkLogin = function() {
-            const id = document.getElementById('admin_id').value;
-            const pass = document.getElementById('admin_pass').value;
-            if(id === "ADMIN1" && pass === "NEXUM ALPHA") {
-                document.getElementById('login_section').classList.add('hidden');
-                document.getElementById('admin_content').classList.remove('hidden');
-            } else {
-                alert("Identifiants incorrects");
+        // --- SAUVEGARDE DES INFOS ENTREPRISE ---
+        window.saveConfig = async () => {
+            const config = {
+                nom: "NEXUM ALPHA",
+                ifu: document.getElementById('conf_ifu').value,
+                rccm: document.getElementById('conf_rccm').value,
+                email: document.getElementById('conf_email').value,
+                tel: document.getElementById('conf_tel').value,
+                logoUrl: document.getElementById('conf_logo').value, // Lien vers une image
+                secteur: document.getElementById('conf_secteur').value
+            };
+            await setDoc(doc(db, "parametres", "entreprise"), config);
+            alert("Informations mises à jour sur tout le site !");
+        };
+
+        // --- CHARGEMENT INITIAL ---
+        async function loadData() {
+            const snap = await getDoc(doc(db, "parametres", "entreprise"));
+            if(snap.exists()){
+                const d = snap.data();
+                document.getElementById('conf_ifu').value = d.ifu || "";
+                document.getElementById('conf_rccm').value = d.rccm || "";
+                document.getElementById('conf_email').value = d.email || "";
+                document.getElementById('conf_tel').value = d.tel || "";
+                document.getElementById('conf_logo').value = d.logoUrl || "";
+                document.getElementById('conf_secteur').value = d.secteur || "";
             }
         }
+        loadData();
 
-        // --- Génération de Facture PDF ---
-        window.genererFacture = function() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const client = document.getElementById('f_client').value;
-            const montant = document.getElementById('f_montant').value;
-            const service = document.getElementById('f_service').value;
+        // --- GESTION DES MEMBRES ---
+        onSnapshot(collection(db, "utilisateurs"), (snap) => {
+            const list = document.getElementById('membres_list');
+            list.innerHTML = "";
+            snap.forEach(userDoc => {
+                const u = userDoc.data();
+                list.innerHTML += `
+                <div class="flex justify-between items-center p-3 bg-gray-50 mb-2 rounded">
+                    <span>${u.nom} (${u.email})</span>
+                    <button onclick="validerMembre('${userDoc.id}', ${!u.valide})" 
+                        class="px-3 py-1 rounded ${u.valide ? 'bg-red-500' : 'bg-green-500'} text-white text-xs">
+                        ${u.valide ? 'Bloquer' : 'Approuver'}
+                    </button>
+                </div>`;
+            });
+        });
 
-            // En-tête NEXUM ALPHA
-            doc.setFontSize(22);
-            doc.setTextColor(30, 58, 138);
-            doc.text("NEXUM ALPHA", 105, 20, null, null, "center");
-            
-            doc.setFontSize(10);
-            doc.setTextColor(100);
-            doc.text("Directeur des Opérations, Économiste et Analyste Financier", 105, 27, null, null, "center");
-            doc.text("IFU: [Ton_IFU] | RCCM: [Ton_RCCM]", 105, 33, null, null, "center");
-            
-            doc.setDrawColor(30, 58, 138);
-            doc.line(20, 40, 190, 40);
-
-            // Corps de la facture
-            doc.setFontSize(14);
-            doc.setTextColor(0);
-            doc.text(`Facture à l'attention de : ${client}`, 20, 60);
-            doc.text(`Objet : ${service}`, 20, 75);
-            doc.text(`Montant Total : ${montant} FCFA`, 20, 90);
-
-            doc.save(`Facture_NEXUM_${client}.pdf`);
-        }
+        window.validerMembre = async (id, status) => {
+            await updateDoc(doc(db, "utilisateurs", id), { valide: status });
+        };
     </script>
-    <style>
-        .sidebar { background: #1e3a8a; }
-        .btn-modern { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
-    </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-
-    <!-- LOGIN SECTION -->
-    <div id="login_section" class="flex items-center justify-center h-screen">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl w-96">
-            <h2 class="text-2xl font-bold text-center text-blue-900 mb-6">Connexion NEXUM</h2>
-            <input type="text" id="admin_id" placeholder="Identifiant" class="w-full mb-4 p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
-            <input type="password" id="admin_pass" placeholder="Mot de passe" class="w-full mb-6 p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
-            <button onclick="checkLogin()" class="w-full btn-modern text-white py-3 rounded-lg font-bold">Entrer</button>
-        </div>
-    </div>
-
-    <!-- ADMIN CONTENT -->
-    <div id="admin_content" class="hidden flex flex-col md:flex-row h-screen">
-        <!-- Sidebar -->
-        <div class="sidebar w-full md:w-64 p-6 text-white">
-            <h1 class="text-xl font-bold mb-10 text-center">NEXUM ALPHA ERP</h1>
-            <nav class="space-y-4">
-                <button class="w-full text-left p-3 rounded hover:bg-blue-700 block"><i class="fas fa-file-invoice mr-2"></i> Facturation</button>
-                <button class="w-full text-left p-3 rounded hover:bg-blue-700 block"><i class="fas fa-tasks mr-2"></i> Projets</button>
-                <button class="w-full text-left p-3 rounded hover:bg-blue-700 block"><i class="fas fa-users mr-2"></i> CeFOR Membres</button>
-            </nav>
-        </div>
-
-        <!-- Main Area -->
-        <main class="flex-1 p-8 overflow-y-auto">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-800">Tableau de Bord</h2>
-                <div class="text-sm font-medium text-blue-800 bg-blue-100 px-4 py-2 rounded-full">Session : Joseph D. BLOH</div>
-            </div>
-
-            <!-- Widgets -->
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Module Facture -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 class="text-xl font-bold mb-4 text-blue-900 border-b pb-2">Nouvelle Facture</h3>
-                    <div class="space-y-4">
-                        <input type="text" id="f_client" placeholder="Nom du Client" class="w-full p-2 border rounded">
-                        <input type="text" id="f_service" placeholder="Service (ex: Audit, Conseil)" class="w-full p-2 border rounded">
-                        <input type="number" id="f_montant" placeholder="Montant (FCFA)" class="w-full p-2 border rounded">
-                        <button onclick="genererFacture()" class="w-full bg-emerald-500 text-white py-2 rounded font-bold hover:bg-emerald-600">Générer PDF</button>
-                    </div>
-                </div>
-
-                <!-- Suivi Projets -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <h3 class="text-xl font-bold mb-4 text-blue-900 border-b pb-2">Projets en Cours</h3>
-                    <ul class="space-y-3">
-                        <li class="flex justify-between items-center p-2 bg-gray-50 rounded">
-                            <span>Conseil Fiscal - Janvier</span>
-                            <span class="text-xs bg-orange-200 px-2 py-1 rounded text-orange-800">En cours</span>
-                        </li>
-                        <li class="flex justify-between items-center p-2 bg-gray-50 rounded">
-                            <span>Formation CeFOR - Marketing</span>
-                            <span class="text-xs bg-green-200 px-2 py-1 rounded text-green-800">Terminé</span>
-                        </li>
-                    </ul>
+<body class="bg-gray-100 p-4 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-3xl font-bold text-blue-900 mb-8">Console de Direction NEXUM ALPHA</h1>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- CONFIGURATION SITE -->
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-bold mb-4 border-b pb-2 text-blue-700">Configuration du Site</h2>
+                <div class="space-y-3">
+                    <input type="text" id="conf_logo" placeholder="Lien du Logo (URL)" class="w-full p-2 border rounded">
+                    <input type="text" id="conf_ifu" placeholder="Numéro IFU" class="w-full p-2 border rounded">
+                    <input type="text" id="conf_rccm" placeholder="Numéro RCCM" class="w-full p-2 border rounded">
+                    <input type="email" id="conf_email" placeholder="Email de contact" class="w-full p-2 border rounded">
+                    <input type="text" id="conf_tel" placeholder="Téléphone" class="w-full p-2 border rounded">
+                    <textarea id="conf_secteur" placeholder="Secteur d'activité" class="w-full p-2 border rounded"></textarea>
+                    <button onclick="saveConfig()" class="w-full bg-blue-600 text-white py-3 rounded font-bold">Mettre à jour le site</button>
                 </div>
             </div>
-        </main>
-    </div>
 
+            <!-- GESTION DES MEMBRES -->
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-bold mb-4 border-b pb-2 text-green-700">Validation des Membres (CeFOR BENIN)</h2>
+                <div id="membres_list" class="max-h-64 overflow-y-auto">
+                    <!-- Liste générée par JS -->
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
