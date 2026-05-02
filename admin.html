@@ -1,98 +1,119 @@
-<!-- Copie ce code dans ton fichier admin.html sur GitHub -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Direction NEXUM ALPHA | Administration</title>
+    <title>Direction NEXUM ALPHA | Système Intégré</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = { projectId: "nexumalpha-27597" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- SAUVEGARDE DES INFOS ENTREPRISE ---
-        window.saveConfig = async () => {
-            const config = {
-                nom: "NEXUM ALPHA",
-                ifu: document.getElementById('conf_ifu').value,
-                rccm: document.getElementById('conf_rccm').value,
-                email: document.getElementById('conf_email').value,
-                tel: document.getElementById('conf_tel').value,
-                logoUrl: document.getElementById('conf_logo').value, // Lien vers une image
-                secteur: document.getElementById('conf_secteur').value
-            };
-            await setDoc(doc(db, "parametres", "entreprise"), config);
-            alert("Informations mises à jour sur tout le site !");
-        };
+        // CONNEXION
+        window.connecter = () => {
+            const id = document.getElementById('id').value;
+            const pw = document.getElementById('pw').value;
+            if(id === "ADMIN1" && pw === "NEXUM ALPHA"){
+                document.getElementById('login').style.display = "none";
+                document.getElementById('app').style.display = "block";
+                loadConfig();
+            } else { alert("Accès refusé"); }
+        }
 
-        // --- CHARGEMENT INITIAL ---
-        async function loadData() {
-            const snap = await getDoc(doc(db, "parametres", "entreprise"));
-            if(snap.exists()){
-                const d = snap.data();
-                document.getElementById('conf_ifu').value = d.ifu || "";
-                document.getElementById('conf_rccm').value = d.rccm || "";
-                document.getElementById('conf_email').value = d.email || "";
-                document.getElementById('conf_tel').value = d.tel || "";
-                document.getElementById('conf_logo').value = d.logoUrl || "";
-                document.getElementById('conf_secteur').value = d.secteur || "";
+        // MISE À JOUR INFOS GÉNÉRALES
+        window.saveConfig = async () => {
+            const btn = document.getElementById('btnSave');
+            btn.innerText = "Mise à jour...";
+            await setDoc(doc(db, "parametres", "entreprise"), {
+                ifu: document.getElementById('ifu').value,
+                rccm: document.getElementById('rccm').value,
+                email: document.getElementById('email').value,
+                logoUrl: document.getElementById('logo').value,
+                tel: document.getElementById('tel').value
+            });
+            btn.innerText = "✅ MIS À JOUR";
+            setTimeout(() => btn.innerText = "SAUVEGARDER LES INFOS", 2000);
+        }
+
+        async function loadConfig(){
+            const s = await getDoc(doc(db, "parametres", "entreprise"));
+            if(s.exists()){
+                const d = s.data();
+                document.getElementById('ifu').value = d.ifu || "";
+                document.getElementById('rccm').value = d.rccm || "";
+                document.getElementById('email').value = d.email || "";
+                document.getElementById('logo').value = d.logoUrl || "";
+                document.getElementById('tel').value = d.tel || "";
             }
         }
-        loadData();
 
-        // --- GESTION DES MEMBRES ---
-        onSnapshot(collection(db, "utilisateurs"), (snap) => {
-            const list = document.getElementById('membres_list');
-            list.innerHTML = "";
-            snap.forEach(userDoc => {
-                const u = userDoc.data();
-                list.innerHTML += `
-                <div class="flex justify-between items-center p-3 bg-gray-50 mb-2 rounded">
-                    <span>${u.nom} (${u.email})</span>
-                    <button onclick="validerMembre('${userDoc.id}', ${!u.valide})" 
-                        class="px-3 py-1 rounded ${u.valide ? 'bg-red-500' : 'bg-green-500'} text-white text-xs">
-                        ${u.valide ? 'Bloquer' : 'Approuver'}
-                    </button>
-                </div>`;
+        // GESTION OFFRES EMPLOI
+        window.addJob = async () => {
+            await addDoc(collection(db, "jobs"), {
+                titre: document.getElementById('job_titre').value,
+                description: document.getElementById('job_desc').value
             });
-        });
+            alert("Offre ajoutée !");
+        }
 
-        window.validerMembre = async (id, status) => {
-            await updateDoc(doc(db, "utilisateurs", id), { valide: status });
-        };
+        // GESTION RÉSULTATS
+        window.addResult = async () => {
+            await addDoc(collection(db, "resultats"), {
+                nom: document.getElementById('res_nom').value,
+                score: document.getElementById('res_score').value
+            });
+            alert("Résultat publié !");
+        }
     </script>
 </head>
-<body class="bg-gray-100 p-4 md:p-8">
-    <div class="max-w-5xl mx-auto">
-        <h1 class="text-3xl font-bold text-blue-900 mb-8">Console de Direction NEXUM ALPHA</h1>
+<body class="bg-slate-900 text-white p-6">
+
+    <div id="login" class="max-w-md mx-auto mt-20 bg-slate-800 p-8 rounded-3xl shadow-xl">
+        <h2 class="text-2xl font-bold mb-6 text-center">LOGIN DIRECTION</h2>
+        <input type="text" id="id" placeholder="ID Admin" class="w-full p-3 bg-slate-700 rounded mb-4">
+        <input type="password" id="pw" placeholder="Mot de Passe" class="w-full p-3 bg-slate-700 rounded mb-6">
+        <button onclick="connecter()" class="w-full bg-blue-600 p-4 rounded-xl font-bold uppercase">Entrer</button>
+    </div>
+
+    <div id="app" style="display:none;" class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-black mb-10">PILOTAGE <span class="text-blue-500">NEXUM ALPHA</span></h1>
         
-        <div class="grid md:grid-cols-2 gap-8">
-            <!-- CONFIGURATION SITE -->
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h2 class="text-xl font-bold mb-4 border-b pb-2 text-blue-700">Configuration du Site</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-slate-800 p-6 rounded-3xl">
+                <h3 class="font-bold mb-4 border-b border-slate-700 pb-2">1. INFOS ENTREPRISE</h3>
                 <div class="space-y-3">
-                    <input type="text" id="conf_logo" placeholder="Lien du Logo (URL)" class="w-full p-2 border rounded">
-                    <input type="text" id="conf_ifu" placeholder="Numéro IFU" class="w-full p-2 border rounded">
-                    <input type="text" id="conf_rccm" placeholder="Numéro RCCM" class="w-full p-2 border rounded">
-                    <input type="email" id="conf_email" placeholder="Email de contact" class="w-full p-2 border rounded">
-                    <input type="text" id="conf_tel" placeholder="Téléphone" class="w-full p-2 border rounded">
-                    <textarea id="conf_secteur" placeholder="Secteur d'activité" class="w-full p-2 border rounded"></textarea>
-                    <button onclick="saveConfig()" class="w-full bg-blue-600 text-white py-3 rounded font-bold">Mettre à jour le site</button>
+                    <input type="text" id="logo" placeholder="URL Logo" class="w-full p-2 bg-slate-700 rounded border-0">
+                    <input type="text" id="ifu" placeholder="IFU" class="w-full p-2 bg-slate-700 rounded border-0">
+                    <input type="text" id="rccm" placeholder="RCCM" class="w-full p-2 bg-slate-700 rounded border-0">
+                    <input type="text" id="email" placeholder="Email" class="w-full p-2 bg-slate-700 rounded border-0">
+                    <input type="text" id="tel" placeholder="Tel" class="w-full p-2 bg-slate-700 rounded border-0">
+                    <button id="btnSave" onclick="saveConfig()" class="w-full bg-blue-600 p-3 rounded font-bold mt-4">SAUVEGARDER LES INFOS</button>
                 </div>
             </div>
 
-            <!-- GESTION DES MEMBRES -->
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h2 class="text-xl font-bold mb-4 border-b pb-2 text-green-700">Validation des Membres (CeFOR BENIN)</h2>
-                <div id="membres_list" class="max-h-64 overflow-y-auto">
-                    <!-- Liste générée par JS -->
+            <div class="bg-slate-800 p-6 rounded-3xl">
+                <h3 class="font-bold mb-4 border-b border-slate-700 pb-2">2. OFFRES D'EMPLOI</h3>
+                <div class="space-y-3">
+                    <input type="text" id="job_titre" placeholder="Titre du poste" class="w-full p-2 bg-slate-700 rounded border-0">
+                    <textarea id="job_desc" placeholder="Détails de l'offre" class="w-full p-2 bg-slate-700 rounded border-0"></textarea>
+                    <button onclick="addJob()" class="w-full bg-emerald-600 p-3 rounded font-bold">PUBLIER L'OFFRE</button>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 p-6 rounded-3xl">
+                <h3 class="font-bold mb-4 border-b border-slate-700 pb-2">3. RÉSULTATS TESTS</h3>
+                <div class="space-y-3">
+                    <input type="text" id="res_nom" placeholder="Nom du candidat ou Test" class="w-full p-2 bg-slate-700 rounded border-0">
+                    <input type="text" id="res_score" placeholder="Score ou Mention" class="w-full p-2 bg-slate-700 rounded border-0">
+                    <button onclick="addResult()" class="w-full bg-orange-600 p-3 rounded font-bold">PUBLIER RÉSULTAT</button>
                 </div>
             </div>
         </div>
     </div>
+
 </body>
 </html>
