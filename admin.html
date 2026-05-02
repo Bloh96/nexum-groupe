@@ -2,118 +2,89 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Direction NEXUM ALPHA | Système Intégré</title>
+    <title>Console Master | NEXUM ALPHA</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = { projectId: "nexumalpha-27597" };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // CONNEXION
-        window.connecter = () => {
-            const id = document.getElementById('id').value;
-            const pw = document.getElementById('pw').value;
-            if(id === "ADMIN1" && pw === "NEXUM ALPHA"){
-                document.getElementById('login').style.display = "none";
-                document.getElementById('app').style.display = "block";
-                loadConfig();
-            } else { alert("Accès refusé"); }
-        }
-
-        // MISE À JOUR INFOS GÉNÉRALES
-        window.saveConfig = async () => {
-            const btn = document.getElementById('btnSave');
-            btn.innerText = "Mise à jour...";
-            await setDoc(doc(db, "parametres", "entreprise"), {
-                ifu: document.getElementById('ifu').value,
-                rccm: document.getElementById('rccm').value,
-                email: document.getElementById('email').value,
-                logoUrl: document.getElementById('logo').value,
-                tel: document.getElementById('tel').value
-            });
-            btn.innerText = "✅ MIS À JOUR";
-            setTimeout(() => btn.innerText = "SAUVEGARDER LES INFOS", 2000);
-        }
-
-        async function loadConfig(){
-            const s = await getDoc(doc(db, "parametres", "entreprise"));
-            if(s.exists()){
-                const d = s.data();
-                document.getElementById('ifu').value = d.ifu || "";
-                document.getElementById('rccm').value = d.rccm || "";
-                document.getElementById('email').value = d.email || "";
-                document.getElementById('logo').value = d.logoUrl || "";
-                document.getElementById('tel').value = d.tel || "";
-            }
-        }
-
-        // GESTION OFFRES EMPLOI
-        window.addJob = async () => {
-            await addDoc(collection(db, "jobs"), {
-                titre: document.getElementById('job_titre').value,
-                description: document.getElementById('job_desc').value
-            });
-            alert("Offre ajoutée !");
-        }
-
-        // GESTION RÉSULTATS
-        window.addResult = async () => {
-            await addDoc(collection(db, "resultats"), {
-                nom: document.getElementById('res_nom').value,
-                score: document.getElementById('res_score').value
-            });
-            alert("Résultat publié !");
-        }
-    </script>
 </head>
-<body class="bg-slate-900 text-white p-6">
+<body class="bg-slate-900 text-white p-8">
+    <h1 class="text-3xl font-black text-cyan-400 mb-12 uppercase tracking-tighter">Command Center NEXUM</h1>
 
-    <div id="login" class="max-w-md mx-auto mt-20 bg-slate-800 p-8 rounded-3xl shadow-xl">
-        <h2 class="text-2xl font-bold mb-6 text-center">LOGIN DIRECTION</h2>
-        <input type="text" id="id" placeholder="ID Admin" class="w-full p-3 bg-slate-700 rounded mb-4">
-        <input type="password" id="pw" placeholder="Mot de Passe" class="w-full p-3 bg-slate-700 rounded mb-6">
-        <button onclick="connecter()" class="w-full bg-blue-600 p-4 rounded-xl font-bold uppercase">Entrer</button>
-    </div>
+    <div class="grid lg:grid-cols-2 gap-12">
+        <div class="bg-slate-800 p-8 rounded-3xl">
+            <h2 class="text-xl font-bold mb-6 italic">Gestion des Adhésions</h2>
+            <div id="adh-list" class="space-y-4"></div>
+        </div>
 
-    <div id="app" style="display:none;" class="max-w-6xl mx-auto">
-        <h1 class="text-3xl font-black mb-10">PILOTAGE <span class="text-blue-500">NEXUM ALPHA</span></h1>
-        
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="bg-slate-800 p-6 rounded-3xl">
-                <h3 class="font-bold mb-4 border-b border-slate-700 pb-2">1. INFOS ENTREPRISE</h3>
-                <div class="space-y-3">
-                    <input type="text" id="logo" placeholder="URL Logo" class="w-full p-2 bg-slate-700 rounded border-0">
-                    <input type="text" id="ifu" placeholder="IFU" class="w-full p-2 bg-slate-700 rounded border-0">
-                    <input type="text" id="rccm" placeholder="RCCM" class="w-full p-2 bg-slate-700 rounded border-0">
-                    <input type="text" id="email" placeholder="Email" class="w-full p-2 bg-slate-700 rounded border-0">
-                    <input type="text" id="tel" placeholder="Tel" class="w-full p-2 bg-slate-700 rounded border-0">
-                    <button id="btnSave" onclick="saveConfig()" class="w-full bg-blue-600 p-3 rounded font-bold mt-4">SAUVEGARDER LES INFOS</button>
-                </div>
-            </div>
-
-            <div class="bg-slate-800 p-6 rounded-3xl">
-                <h3 class="font-bold mb-4 border-b border-slate-700 pb-2">2. OFFRES D'EMPLOI</h3>
-                <div class="space-y-3">
-                    <input type="text" id="job_titre" placeholder="Titre du poste" class="w-full p-2 bg-slate-700 rounded border-0">
-                    <textarea id="job_desc" placeholder="Détails de l'offre" class="w-full p-2 bg-slate-700 rounded border-0"></textarea>
-                    <button onclick="addJob()" class="w-full bg-emerald-600 p-3 rounded font-bold">PUBLIER L'OFFRE</button>
-                </div>
-            </div>
-
-            <div class="bg-slate-800 p-6 rounded-3xl">
-                <h3 class="font-bold mb-4 border-b border-slate-700 pb-2">3. RÉSULTATS TESTS</h3>
-                <div class="space-y-3">
-                    <input type="text" id="res_nom" placeholder="Nom du candidat ou Test" class="w-full p-2 bg-slate-700 rounded border-0">
-                    <input type="text" id="res_score" placeholder="Score ou Mention" class="w-full p-2 bg-slate-700 rounded border-0">
-                    <button onclick="addResult()" class="w-full bg-orange-600 p-3 rounded font-bold">PUBLIER RÉSULTAT</button>
-                </div>
+        <div class="bg-slate-800 p-8 rounded-3xl">
+            <h2 class="text-xl font-bold mb-6 italic">Ajouter au Shop</h2>
+            <div class="space-y-4">
+                <input type="text" id="p_nom" placeholder="Nom du produit / formation" class="w-full p-3 bg-slate-700 rounded-xl">
+                <input type="text" id="p_image" placeholder="URL Image" class="w-full p-3 bg-slate-700 rounded-xl">
+                <input type="number" id="p_prix" placeholder="Prix (FCFA)" class="w-full p-3 bg-slate-700 rounded-xl">
+                <textarea id="p_desc" placeholder="Description courte" class="w-full p-3 bg-slate-700 rounded-xl"></textarea>
+                <button onclick="ajouterProduit()" class="w-full bg-cyan-500 text-black py-4 rounded-2xl font-bold uppercase">Mettre en vente</button>
             </div>
         </div>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAJmFMpJsMsQCrYM4Xw5yVScNfDzW6tncI",
+            authDomain: "nexumalpha-27597.firebaseapp.com",
+            projectId: "nexumalpha-27597",
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // SYNC MEMBRES
+        onSnapshot(collection(db, "utilisateurs"), (snap) => {
+            const list = document.getElementById('adh-list');
+            list.innerHTML = "";
+            snap.forEach(userDoc => {
+                const u = userDoc.data();
+                if(!u.traite) {
+                    list.innerHTML += `
+                    <div class="p-4 bg-slate-700 rounded-2xl flex justify-between items-center">
+                        <div>
+                            <div class="font-bold">${u.nom}</div>
+                            <div class="text-xs text-slate-400">${u.email}</div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="repondreAdhesion('${userDoc.id}', '${u.email}', true)" class="bg-emerald-500 p-2 rounded-lg text-xs font-bold">ACCEPTER</button>
+                            <button onclick="repondreAdhesion('${userDoc.id}', '${u.email}', false)" class="bg-red-500 p-2 rounded-lg text-xs font-bold">REFUSER</button>
+                        </div>
+                    </div>`;
+                }
+            });
+        });
+
+        window.repondreAdhesion = async (id, email, status) => {
+            // 1. Marquer comme traité dans Firestore
+            await updateDoc(doc(db, "utilisateurs", id), { traite: true, valide: status });
+            
+            // 2. Déclencher l'Email (via Firebase Extension "Trigger Email")
+            // Note: Pour que cela fonctionne, installe l'extension "Trigger Email" dans ta console Firebase
+            await addDoc(collection(db, "mail"), {
+                to: email,
+                message: {
+                    subject: status ? "Bienvenue chez NEXUM ALPHA !" : "Information concernant votre demande",
+                    text: status ? "Félicitations, votre demande d'adhésion a été validée. Vous pouvez maintenant générer votre badge sur le site." : "Désolé, votre demande n'a pas été retenue pour le moment.",
+                }
+            });
+            alert("Réponse envoyée !");
+        };
+
+        window.ajouterProduit = async () => {
+            await addDoc(collection(db, "boutique"), {
+                nom: document.getElementById('p_nom').value,
+                prix: document.getElementById('p_prix').value,
+                image: document.getElementById('p_image').value,
+                description: document.getElementById('p_desc').value
+            });
+            alert("Produit ajouté à la boutique !");
+        };
+    </script>
 </body>
 </html>
